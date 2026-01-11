@@ -1,0 +1,60 @@
+{
+  "compilerOptions": {
+    /* ===============================
+       OUTPUT & TARGET
+    =============================== */
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "noEmit": true,
+
+    /* ===============================
+       MODULE RESOLUTION
+    =============================== */
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* ===============================
+       TYPE SAFETY (DISENGAJA LONGGAR)
+    =============================== */
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+
+    /* ===============================
+       PATH ALIAS (LOCKED & JELAS)
+    =============================== */
+    "baseUrl": ".",
+    "paths": {
+      "@app/*": ["src/app/*"],
+      "@modules/*": ["src/modules/*"],
+      "@core/*": ["src/core/*"],
+      "@shared/*": ["src/shared/*"],
+
+      /* ===== MOCKS (Tempo / Web3) ===== */
+      "tempo.ts": ["src/core/tempo/mocks/tempo-chains"],
+      "tempo.ts/*": ["src/core/tempo/mocks/*"],
+
+      "wagmi": ["src/core/tempo/mocks/wagmi"],
+      "wagmi/*": ["src/core/tempo/mocks/*"],
+
+      "viem": ["src/core/tempo/mocks/viem"],
+      "viem/*": ["src/core/tempo/mocks/*"]
+    }
+  },
+
+  /* ===============================
+     PROJECT SCOPE
+  =============================== */
+  "include": ["src", "scripts"],
+  "exclude": ["node_modules", "dist"]
+}

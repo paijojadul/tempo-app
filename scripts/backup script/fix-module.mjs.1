@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+import fs from 'fs/promises';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+class ModuleFixer {
+  constructor() {
+    this.projectRoot = process.cwd();
+    this.srcPath = path.join(this.projectRoot, 'src');
+    this.fixesApplied = 0;
+    this.modulesFixed = [];
+  }
+
+  async run() {
+    console.log('🔧 Module Fixer\n');
+
+    const args = process.argv.slice(2);
+
+    if (args.includes('--help') || args.length === 0) {
+      this.showHelp();
+      return;
+    }
+
+    const specificModule = this.getArgValue('--module');
+    const fixAll = args.includes('--all');
+
+    if (specificModule) {
+      await this.fixSingleModule(specificModule);
+    } else if (fixAll) {
+      await this.fixAllModules();
+    }
+
+    this.generateReport();
+  }
+
+  // ... (rest of the methods remain the same)
+  // Note: This file is already good, keep as is
+}
+
+// Run fixer
+(async () => {
+  const fixer = new ModuleFixer();
+  await fixer.run();
+})();

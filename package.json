@@ -1,0 +1,85 @@
+{
+  "name": "tempo-app",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Modular Tempo blockchain application with clean architecture",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": [
+    "tempo",
+    "blockchain",
+    "react",
+    "typescript",
+    "modular"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "packageManager": "pnpm@8.15.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "vite",
+    
+    "type-check": "tsc --noEmit --skipLibCheck",
+    "type-check:strict": "tsc --noEmit --strict",
+    "type-check:watch": "tsc --noEmit --skipLibCheck --watch",
+    
+    "lint": "eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    
+    "clean": "rm -rf dist .turbo node_modules/.vite",
+    "clean:all": "rm -rf node_modules pnpm-lock.yaml",
+    
+    "validate": "pnpm run type-check && pnpm run lint",
+    "validate:full": "pnpm run validate && pnpm run test"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.90.16",
+    "@wagmi/core": "^3.2.1",
+    "clsx": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tailwind-merge": "^2.6.0",
+    "viem": "^2.44.1",
+    "wagmi": "^3.3.1",
+    "zustand": "^4.5.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.28",
+    "@types/react": "^18.3.27",
+    "@types/react-dom": "^18.3.7",
+    "typescript": "^5.9.3",
+    "vite": "^5.4.21",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.23",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.19",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-react-refresh": "^0.4.26",
+    "prettier": "^3.7.4",
+    "prettier-plugin-tailwindcss": "^0.5.14",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^14.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitest/coverage-v8": "^1.6.1",
+    "@vitest/ui": "^1.6.1",
+    "jsdom": "^24.1.3",
+    "vitest": "^1.6.1",
+    "@wagmi/cli": "^2.8.0"
+  }
+}
