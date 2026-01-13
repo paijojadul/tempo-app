@@ -1,97 +1,35 @@
-import { create } from 'zustand';
-import type { IssuanceItem } from './service';
+import { create } from 'zustand'
+import type { AsyncState } from '../../shared/store/async'
+import { createAsyncState } from '../../shared/store/async'
+import type { Issuance } from './types'
+import { fetchIssuances } from './service'
 
-// Issuance Store
-// Store hanya handle STATE, tidak boleh panggil service langsung!
-
-interface IssuanceState {
-  items: IssuanceItem[];
-  loading: boolean;
-  error: string | null;
-  selectedItem: IssuanceItem | null;
-
-  // Setter functions
-  setItems: (items: IssuanceItem[]) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  setSelectedItem: (item: IssuanceItem | null) => void;
-  clearError: () => void;
-  reset: () => void;
-  removeItemById: (id: string) => void;
+type IssuanceStore = {
+  issuances: AsyncState<Issuance[]>
+  loadIssuances: () => Promise<void>
 }
 
-export const useIssuanceStore = create<IssuanceState>((set) => ({
-  // State
-  items: [],
-  loading: false,
-  error: null,
-  selectedItem: null,
+export const useIssuanceStore = create<IssuanceStore>((set) => ({
+  issuances: createAsyncState<Issuance[]>(),
 
-  // Actions
-  setItems: (items) => set({ items }),
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  setSelectedItem: (selectedItem) => set({ selectedItem }),
-  clearError: () => set({ error: null }),
-  reset: () => set({
-    items: [],
-    loading: false,
-    error: null,
-    selectedItem: null
-  }),
-  removeItemById: (id: string) =>
-    set((state) => {
-      const newItems = state.items.filter(item => item.id !== id);
-      const shouldClearSelected = state.selectedItem?.id === id;
+  async loadIssuances() {
+    set((s) => ({
+      issuances: { ...s.issuances, status: 'loading', error: undefined },
+    }))
 
-      return {
-        items: newItems,
-        selectedItem: shouldClearSelected ? null : state.selectedItem
-      };
-    }),
-}));
-
-// Helper hook untuk common patterns
-export function useIssuance() {
-  const store = useIssuanceStore();
-
-  return {
-    // State
-    ...store,
-
-    // Computed values
-    getItemById: (id: string) => store.items.find(item => item.id === id),
-    hasItems: store.items.length > 0,
-    isEmpty: store.items.length === 0,
-
-    // Actions dengan business logic
-    selectItemById: (id: string) => {
-      const item = store.items.find(item => item.id === id);
-      store.setSelectedItem(item || null);
-    },
-
-    // Untuk integrasi dengan service layer
-    updateLocalItem: (updatedItem: IssuanceItem) => {
-      const newItems = store.items.map(item =>
-        item.id === updatedItem.id ? updatedItem : item
-      );
-      store.setItems(newItems);
-
-      // Update selected item jika sama
-      if (store.selectedItem?.id === updatedItem.id) {
-        store.setSelectedItem(updatedItem);
-      }
-    },
-
-    removeItemById: (id: string) => {
-      store.removeItemById(id);
-    },
-
-    // Reset dengan konfirmasi
-    resetWithConfirmation: () => {
-      if (confirm('Are you sure you want to reset all data?')) {
-        store.reset();
-      }
+    try {
+      const data = await fetchIssuances()
+      set({
+        issuances: { data, status: 'success' },
+      })
+    } catch (err) {
+      set({
+        issuances: {
+          data: null,
+          status: 'error',
+          error: 'FAILED_TO_LOAD',
+        },
+      })
     }
-  };
-}
+  },
+}))

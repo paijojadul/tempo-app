@@ -1,9 +1,13 @@
-// Core Tempo module exports
-export * from './chains';
-export * from './client';
-export * from './wallet';
+// src/core/tempo/index.ts
+// Public API — Phase 3 Day 1
+// Transport & error contract ONLY
 
-// Re-export commonly used items with explicit names
-export { getTempoClient } from './client';
-export { TEMPO_TESTNET } from './chains';
-export { connectWallet } from './wallet';
+export { tempoRequest } from './client'
+export type { TempoError, TempoErrorCode } from './client'
+
+export { TEMPO_TESTNET } from './chains'
+export * from './accounts'
+export * from './exchange'
+export * from './issuance'
+export * from './payments'
+export * from './transactions'

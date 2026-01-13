@@ -1,3 +1,3 @@
 export function IssuanceUI() {
-  return <div>Issuance Module</div>;
+  return <div>Issuance Module</div>
 }

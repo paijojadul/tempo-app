@@ -1,25 +1,9 @@
-// accounts module types
+/**
+ * Phase 2 — Day 1
+ * FORCED placeholder type
+ * Source of truth for store contract
+ */
 
-export interface AccountsItem {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateAccountsDTO {
-  name: string;
-  // Add other fields as needed
-}
-
-export interface UpdateAccountsDTO extends Partial<CreateAccountsDTO> {
-  id: string;
-}
-
-// Response types
-export interface AccountsResponse<T> {
-  success: boolean;
-  data?: T;
-  error?: string;
-  timestamp: number;
+export type Account = {
+  id: string
 }

@@ -1,3 +1,3 @@
 export function PaymentsUI() {
-  return <div>Payments Module</div>;
+  return <div>Payments Module</div>
 }

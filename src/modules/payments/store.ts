@@ -1,97 +1,35 @@
-import { create } from 'zustand';
-import type { PaymentsItem } from './service';
+import { create } from 'zustand'
+import type { AsyncState } from '../../shared/store/async'
+import { createAsyncState } from '../../shared/store/async'
+import type { Payment } from './types'
+import { fetchPayments } from './service'
 
-// Payments Store
-// Store hanya handle STATE, tidak boleh panggil service langsung!
-
-interface PaymentsState {
-  items: PaymentsItem[];
-  loading: boolean;
-  error: string | null;
-  selectedItem: PaymentsItem | null;
-
-  // Setter functions
-  setItems: (items: PaymentsItem[]) => void;
-  setLoading: (loading: boolean) => void;
-  setError: (error: string | null) => void;
-  setSelectedItem: (item: PaymentsItem | null) => void;
-  clearError: () => void;
-  reset: () => void;
-  removeItemById: (id: string) => void;
+type PaymentsStore = {
+  payments: AsyncState<Payment[]>
+  loadPayments: () => Promise<void>
 }
 
-export const usePaymentsStore = create<PaymentsState>((set) => ({
-  // State
-  items: [],
-  loading: false,
-  error: null,
-  selectedItem: null,
+export const usePaymentsStore = create<PaymentsStore>((set) => ({
+  payments: createAsyncState<Payment[]>(),
 
-  // Actions
-  setItems: (items) => set({ items }),
-  setLoading: (loading) => set({ loading }),
-  setError: (error) => set({ error }),
-  setSelectedItem: (selectedItem) => set({ selectedItem }),
-  clearError: () => set({ error: null }),
-  reset: () => set({
-    items: [],
-    loading: false,
-    error: null,
-    selectedItem: null
-  }),
-  removeItemById: (id: string) =>
-    set((state) => {
-      const newItems = state.items.filter(item => item.id !== id);
-      const shouldClearSelected = state.selectedItem?.id === id;
+  async loadPayments() {
+    set((s) => ({
+      payments: { ...s.payments, status: 'loading', error: undefined },
+    }))
 
-      return {
-        items: newItems,
-        selectedItem: shouldClearSelected ? null : state.selectedItem
-      };
-    }),
-}));
-
-// Helper hook untuk common patterns
-export function usePayments() {
-  const store = usePaymentsStore();
-
-  return {
-    // State
-    ...store,
-
-    // Computed values
-    getItemById: (id: string) => store.items.find(item => item.id === id),
-    hasItems: store.items.length > 0,
-    isEmpty: store.items.length === 0,
-
-    // Actions dengan business logic
-    selectItemById: (id: string) => {
-      const item = store.items.find(item => item.id === id);
-      store.setSelectedItem(item || null);
-    },
-
-    // Untuk integrasi dengan service layer
-    updateLocalItem: (updatedItem: PaymentsItem) => {
-      const newItems = store.items.map(item =>
-        item.id === updatedItem.id ? updatedItem : item
-      );
-      store.setItems(newItems);
-
-      // Update selected item jika sama
-      if (store.selectedItem?.id === updatedItem.id) {
-        store.setSelectedItem(updatedItem);
-      }
-    },
-
-    removeItemById: (id: string) => {
-      store.removeItemById(id);
-    },
-
-    // Reset dengan konfirmasi
-    resetWithConfirmation: () => {
-      if (confirm('Are you sure you want to reset all data?')) {
-        store.reset();
-      }
+    try {
+      const data = await fetchPayments()
+      set({
+        payments: { data, status: 'success' },
+      })
+    } catch (err) {
+      set({
+        payments: {
+          data: null,
+          status: 'error',
+          error: 'FAILED_TO_LOAD',
+        },
+      })
     }
-  };
-}
+  },
+}))

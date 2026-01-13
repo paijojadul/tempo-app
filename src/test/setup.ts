@@ -1,36 +1,57 @@
-// Test setup file for Vitest
-import '@testing-library/jest-dom';
-import { vi, afterEach } from 'vitest'; // ← IMPORT afterEach di sini!
-import { cleanup } from '@testing-library/react';
+// src/test/setup.ts
+import '@testing-library/jest-dom'
+import { vi, afterEach } from 'vitest'
+import { cleanup } from '@testing-library/react'
 
-// Cleanup after each test
+/* ===============================
+   GLOBAL DECLARATION (NO ANY)
+=============================== */
+declare global {
+  // React testing environment flag
+  // eslint-disable-next-line no-var
+  var IS_REACT_ACT_ENVIRONMENT: boolean
+
+  interface Window {
+    matchMedia: (query: string) => MediaQueryList
+  }
+}
+
+/* ===============================
+   TEST CLEANUP
+=============================== */
 afterEach(() => {
-  cleanup();
-});
+  cleanup()
+})
 
-// Mock global objects
-(globalThis as any).IS_REACT_ACT_ENVIRONMENT = true;
+/* ===============================
+   GLOBAL FLAGS
+=============================== */
+globalThis.IS_REACT_ACT_ENVIRONMENT = true
 
-// Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
+/* ===============================
+   MOCK ResizeObserver
+=============================== */
+global.ResizeObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
-}));
+}))
 
-// Mock matchMedia
+/* ===============================
+   MOCK matchMedia
+=============================== */
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation((query) => ({
+  value: vi.fn((query: string): MediaQueryList => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: vi.fn(),
+    addListener: vi.fn(), // deprecated but sometimes used
     removeListener: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
     dispatchEvent: vi.fn(),
   })),
-});
+})
 
-console.log('✅ Test setup loaded');
+console.log('✅ Test setup loaded')

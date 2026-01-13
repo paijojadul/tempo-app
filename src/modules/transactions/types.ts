@@ -1,13 +1,9 @@
-// transactions module types
+/**
+ * Phase 2 — Day 1
+ * FORCED placeholder type
+ * Source of truth for store contract
+ */
 
-export interface TransactionsItem {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateTransactionsDTO {
-  name: string;
-  // Add other fields as needed
+export type Transaction = {
+  id: string
 }
