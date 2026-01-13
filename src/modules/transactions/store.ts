@@ -14,7 +14,7 @@ export const useTransactionsStore = create<TransactionsStore>((set) => ({
 
   async loadTransactions() {
     set((s) => ({
-      transactions: { ...s.transactions, status: 'loading', error: undefined },
+      transactions: { ...s.transactions, status: 'loading' },
     }))
 
     try {

@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 /**
- * PHASE 4 AUDIT — QUALITY HARDENING
+ * PHASE 4 AUDIT — QUALITY HARDENING (FINAL)
  *
- * Fokus:
- * - ESLint hard rules aktif
- * - TypeScript strict flags
- * - Tidak ada bypass (@ts-ignore / as any)
- * - Tidak ada import ilegal
- * - CI & config terkunci
+ * Prinsip:
+ * - TIDAK menjalankan lint / tsc sendiri
+ * - HANYA memverifikasi bahwa aturan Phase 4 SUDAH DIKUNCI
+ * - Single Source of Truth tetap: scripts/healthcheck.mjs
+ *
+ * Phase 4 = mengunci, bukan mengulang tooling
  */
 
 import fs from 'fs'
 import path from 'path'
-import { execSync } from 'child_process'
 
 const ROOT = process.cwd()
 
@@ -51,11 +50,13 @@ function scanFiles(dir, matcher, hits = []) {
 /* -------------------------------------------------- */
 console.log('\n🔍 ESLINT HARDENING')
 
-if (!fileExists('.eslintrc.cjs') && !fileExists('.eslintrc.js')) {
+if (!fileExists('eslint.config.js') && !fileExists('eslint.config.ts')) {
   fail('ESLint config tidak ditemukan')
 } else {
   const eslintConfig =
-    fileExists('.eslintrc.cjs') ? read('.eslintrc.cjs') : read('.eslintrc.js')
+    fileExists('eslint.config.ts')
+      ? read('eslint.config.ts')
+      : read('eslint.config.js')
 
   if (!eslintConfig.includes('no-restricted-imports')) {
     fail('no-restricted-imports belum dikunci')
@@ -117,7 +118,7 @@ for (const dir of SOURCE_DIRS) {
   }
 }
 
-if (!FAILED) pass('Tidak ada bypass type/lint')
+if (!FAILED) pass('Tidak ada bypass type / lint')
 
 /* -------------------------------------------------- */
 /* 4. ILLEGAL IMPORT PATTERN SCAN                      */
@@ -125,8 +126,8 @@ if (!FAILED) pass('Tidak ada bypass type/lint')
 console.log('\n🔍 ILLEGAL IMPORT SCAN')
 
 const ILLEGAL_IMPORTS = [
-  "@/core/",
-  "@/modules/",
+  '@/core/',
+  '@/modules/',
 ]
 
 const tsFiles = scanFiles(
@@ -142,11 +143,8 @@ for (const file of tsFiles) {
       content.includes(`from '${illegal}`) ||
       content.includes(`from "${illegal}`)
     ) {
-      // App boleh import modules/* (via index)
-      if (
-        file.includes('/app/') &&
-        illegal === '@/modules/'
-      ) continue
+      // App layer boleh import modules lewat public API
+      if (file.includes('/app/') && illegal === '@/modules/') continue
 
       fail(`Import ilegal ${illegal} di ${path.relative(ROOT, file)}`)
     }
@@ -154,25 +152,6 @@ for (const file of tsFiles) {
 }
 
 if (!FAILED) pass('Tidak ada import ilegal')
-
-/* -------------------------------------------------- */
-/* 5. TOOLING MIRROR CHECK                             */
-/* -------------------------------------------------- */
-console.log('\n🔍 TOOLING CHECK')
-
-try {
-  execSync('npm run lint', { stdio: 'ignore' })
-  pass('lint lulus')
-} catch {
-  fail('lint gagal')
-}
-
-try {
-  execSync('npx tsc --noEmit', { stdio: 'ignore' })
-  pass('tsc --noEmit lulus')
-} catch {
-  fail('TypeScript error ditemukan')
-}
 
 /* -------------------------------------------------- */
 /* FINAL RESULT                                       */

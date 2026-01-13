@@ -14,7 +14,7 @@ export const useAccountsStore = create<AccountsStore>((set) => ({
 
   async loadAccounts() {
     set((s) => ({
-      accounts: { ...s.accounts, status: 'loading', error: undefined },
+      accounts: { ...s.accounts, status: 'loading' },
     }))
 
     try {

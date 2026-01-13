@@ -14,7 +14,7 @@ export const usePaymentsStore = create<PaymentsStore>((set) => ({
 
   async loadPayments() {
     set((s) => ({
-      payments: { ...s.payments, status: 'loading', error: undefined },
+      payments: { ...s.payments, status: 'loading' },
     }))
 
     try {

@@ -14,7 +14,7 @@ export const useExchangeStore = create<ExchangeStore>((set) => ({
 
   async loadExchanges() {
     set((s) => ({
-      exchanges: { ...s.exchanges, status: 'loading', error: undefined },
+      exchanges: { ...s.exchanges, status: 'loading' },
     }))
 
     try {

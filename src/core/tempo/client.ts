@@ -29,7 +29,7 @@ export class TempoError extends Error {
     super(message)
     this.name = 'TempoError'
     this.code = code
-    this.status = status
+    this.status = status ?? 0
   }
 }
 

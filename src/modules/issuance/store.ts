@@ -14,7 +14,7 @@ export const useIssuanceStore = create<IssuanceStore>((set) => ({
 
   async loadIssuances() {
     set((s) => ({
-      issuances: { ...s.issuances, status: 'loading', error: undefined },
+      issuances: { ...s.issuances, status: 'loading' },
     }))
 
     try {

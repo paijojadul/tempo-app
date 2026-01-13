@@ -1,15 +1,12 @@
 export type AsyncStatus = 'idle' | 'loading' | 'success' | 'error'
 
-export type AsyncState<T> = {
-  data: T | null
+export interface AsyncState<T> {
   status: AsyncStatus
+  data: T | null
   error?: string
 }
 
-export function createAsyncState<T>(): AsyncState<T> {
-  return {
-    data: null,
-    status: 'idle',
-    error: undefined,
-  }
-}
+export const createAsyncState = <T>(): AsyncState<T> => ({
+  status: 'idle',
+  data: null,
+})

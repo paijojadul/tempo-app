@@ -10,6 +10,26 @@
     "noEmit": true,
 
     /* ===============================
+       TYPE SAFETY (PHASE 4 HARDENED)
+       NOTE:
+       - strict = false (belum Phase 6)
+       - strictNullChecks = true (WAJIB untuk exactOptionalPropertyTypes)
+    =============================== */
+    "strict": false,
+    "strictNullChecks": true,
+    "exactOptionalPropertyTypes": true,
+
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true,
+    "skipLibCheck": true,
+    "useDefineForClassFields": true,
+
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true,
+
+    /* ===============================
        MODULE RESOLUTION
     =============================== */
     "moduleResolution": "bundler",
@@ -17,21 +37,6 @@
     "allowImportingTsExtensions": true,
     "isolatedModules": true,
     "allowSyntheticDefaultImports": true,
-
-    /* ===============================
-       TYPE SAFETY (DISENGAJA LONGGAR)
-    =============================== */
-    "strict": false,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "useDefineForClassFields": true,
-    "noImplicitOverride": true,
-    "noUncheckedIndexedAccess": true,
-    
 
     /* ===============================
        PATH ALIAS (LOCKED & JELAS)
@@ -58,10 +63,10 @@
   /* ===============================
      PROJECT SCOPE
   =============================== */
-  "include": ["src", "scripts"],
+  "include": ["src"],
   "exclude": [
     "node_modules",
     "dist",
-    "scripts/**" /* ✅ exclude scripts dari TS check untuk Phase 4 aman */
+    "scripts"
   ]
 }
